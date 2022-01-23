@@ -1,3 +1,4 @@
+import uuid
 from contextlib import contextmanager
 
 import streamlit as st
@@ -19,7 +20,7 @@ def close():
 
 
 @contextmanager
-def container(title=None, padding=100, max_width=None):
+def container(title=None, padding=100, max_width=None, scrolling=False, key=uuid.uuid4().hex):
     if max_width:
         max_width = str(max_width) + "px";
     else:
@@ -83,13 +84,15 @@ def container(title=None, padding=100, max_width=None):
         </style>
         """,
         unsafe_allow_html=True
+
     )
     with st.container():
         _container = st.container()
         if title:
             _container.markdown(f"<h1>{title}</h1>", unsafe_allow_html=True)
 
-        close_ = st.button('X')
+        close_ = st.button('X',
+        		    key=key)
         if close_:
             close()
 
@@ -108,7 +111,9 @@ def container(title=None, padding=100, max_width=None):
         }
         </script>
         """,
-        height=0, width=0
+        height=0, width=0,
+        key=key,
+        scrolling=scrolling
     )
 
     with _container:
